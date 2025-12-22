@@ -1,0 +1,235 @@
+⭐ 1. Understand the goal
+
+	get_next_line(int fd) must:
+
+		✔ return one line at a time from a file
+		✔ keep reading from the file without losing data
+		✔ remember leftover data for the next call
+		✔ stop when the file is finished (return NULL)
+		✔ include the \n in each returned line (if it exists)
+
+	This means get_next_line() must keep track of data between calls → that’s where the static variable is needed.
+
+
+
+⭐ 2. Understand how reading works
+
+	read(fd, buffer, BUFFER_SIZE):
+
+		- Reads up to BUFFER_SIZE bytes from a file
+
+		- Returns:
+
+			- number of bytes read
+
+			- 0 → end of file
+
+			- -1 → error
+
+	But read() does not guarantee reading full lines.
+	
+		You may get:
+
+			- half of a line
+
+			- multiple lines together
+
+			- exactly one line
+
+			- or nothing yet
+
+		So you must collect data until you detect a \n.
+
+
+
+⭐ 3. The core idea (VERY IMPORTANT)
+
+	Each time you call get_next_line():
+
+		① Add new data from read() to a static storage
+		② Search that storage for a newline \n
+		③ If a newline exists → return everything up to it
+		④ Save what comes after that newline for the next call
+		⑤ If there’s no newline and read() ends → return final leftover
+
+	This is the whole project in one picture:
+
+
+		[read BUFFER_SIZE bytes] 
+ 			      ↓
+		[append to static storage]
+  			      ↓
+		[is there a '\n'?] → yes → cut and return the line
+                    		  ↓
+                  	save leftover (after '\n')
+
+
+
+⭐ 4. Break the project into small functions
+
+	You are not supposed to code everything in one giant function.
+
+	Here is the recommended structure:
+
+		get_next_line.c
+
+			- get_next_line()
+
+		get_next_line_utils.c
+
+			- ft_strlen()
+
+			- ft_strchr() → find \n
+
+			- ft_strjoin() → join old storage + new buffer
+
+			- ft_substr() (or equivalent) → extract line
+
+			- helper to extract leftover
+
+
+
+⭐ 5. How to write get_next_line (algorithm)
+
+Here is the logic in order:
+
+
+	- STEP 1 — Keep a static variable
+	
+			static char *storage;
+
+
+		This will remember leftover text between calls.
+
+
+	- STEP 2 — Read until you find a newline OR no more data
+	
+		while storage has no '\n':
+		    read BUFFER_SIZE bytes
+   			if read returns 0 → end of file (stop reading)
+		    append buffer to storage
+
+
+		Stop reading when:
+
+			- you find a newline
+
+			- OR the file ends
+
+
+	- STEP 3 — Extract the line to return
+
+		If storage contains:
+
+			"hello world\nthis is next"
+
+
+		Line → "hello world\n"
+
+
+	- STEP 4 — Save the leftover for next time
+
+		After returning "hello world\n", save:
+
+			"this is next"
+
+
+		This must be kept in storage for the next call.
+
+
+	- STEP 5 — Handle end of file
+
+		If storage is empty and read returns 0 → return NULL.
+
+		If storage has something but no newline → return storage.
+
+
+
+⭐ 6. Plan your helper functions
+
+	✔ ft_strchr()
+
+		Search for \n.
+
+	✔ ft_strjoin()
+
+		Append buffer to storage.
+
+	✔ extract_line()
+
+		Return everything up to and including \n.
+
+	✔ save_leftover()
+
+		Keep what’s after the newline.
+
+
+
+⭐ 7. The best way to start coding
+
+	Start in this order:
+
+		✔ Step 1: write utils (strlen, strchr, strjoin)
+
+			Easy and helps the rest of the project work.
+
+		✔ Step 2: write a function that reads until newline
+
+			Just make sure you can fill the storage.
+
+		✔ Step 3: write extract_line()
+
+			Return one full line.
+
+		✔ Step 4: write save_leftover()
+
+			Adjust the static storage.
+
+		✔ Step 5: write the main get_next_line()
+
+
+
+⭐ 8. A small example to visualize
+
+	Imagine BUFFER_SIZE = 5
+	File contains:
+
+		Hello world\nHow are you?
+
+	Call 1:
+
+		read: "Hello"
+		storage = "Hello"
+
+		read: " worl"
+		storage = "Hello worl"
+
+		read: "d\nHow"
+		storage = "Hello world\nHow"
+
+		Stop (newline found)
+
+		Return: "Hello world\n"
+		Leftover: "How"
+
+
+
+⭐ 9. A fully guided outline (your roadmap)
+
+	Here’s exactly what to code, in order:
+
+		1. Write utils
+ 		  - ft_strlen
+ 		  - ft_strchr
+ 		  - ft_strjoin
+
+		2. Write function: read_and_fill_storage()
+
+		3. Write function: extract_line()
+
+		4. Write function: get_leftover()
+
+		5. Put everything together inside get_next_line()
+
+		6. Test with simple files
+

@@ -1,0 +1,218 @@
+1️⃣ The main pieces of get_next_line
+
+	A typical get_next_line uses three key parts:
+
+		1. Buffer
+
+			- A temporary array used to read chunks of data from the file.
+
+			- Size is usually BUFFER_SIZE.
+
+		Example:
+
+			char buffer[BUFFER_SIZE + 1]; // +1 for '\0' if needed
+
+
+		2. Stash (static variable)
+
+			- Stores leftover data between calls.
+
+			- This is crucial because read() might return more than one line or part of a line.
+
+			- Declared static char *stash; inside get_next_line.
+
+
+		3. Helpers
+
+			- Functions to handle strings:
+
+				- find_newline(stash) → check if stash contains \n.
+
+				- extract_line(stash) → get the line to return.
+
+				- update_stash(stash) → remove the returned line from the stash.
+
+
+
+2️⃣ High-level get_next_line flow
+
+	Each call does:
+
+		1. Check if stash already contains a newline
+
+			- If yes → return the line immediately.
+
+		2. Otherwise, read from file
+
+			- Use read(fd, buffer, BUFFER_SIZE) repeatedly until:
+
+				- A newline is found, or
+
+				- read() returns 0 (EOF), or
+
+				- read() returns -1 (error).
+
+		3. Append read data to stash
+
+			- Keep accumulating in stash until a line can be returned.
+
+		4. Return line
+
+			- Extract the line from stash.
+
+			- Keep the leftover in stash for the next call.
+
+
+
+3️⃣ Step-by-step code walkthrough
+
+Here’s a simplified version (with explanations):
+
+
+char *get_next_line(int fd)
+{
+    static char *stash;          // keeps leftover data
+    char buffer[BUFFER_SIZE + 1]; // temporary read buffer
+    int bytes_read;
+
+    if (fd < 0 || BUFFER_SIZE <= 0)
+        return NULL;
+
+    // Read until we find a newline in the stash
+    while (!ft_strchr(stash, '\n')) // helper to check for '\n'
+    {
+        bytes_read = read(fd, buffer, BUFFER_SIZE);
+        if (bytes_read <= 0)       // EOF or error
+            break;
+        buffer[bytes_read] = '\0'; // make buffer a string
+        stash = ft_strjoin(stash, buffer); // append buffer to stash
+    }
+
+    if (!stash || stash[0] == '\0') // nothing left
+    {
+        free(stash);
+        stash = NULL;
+        return NULL;
+    }
+
+    char *line = extract_line(stash);  // get line including '\n'
+    stash = update_stash(stash);       // remove returned line from stash
+    return line;
+}
+
+
+
+🔹 Explanation of each part:
+
+	1. static char *stash;
+
+		- Persists between function calls.
+
+		- Stores leftover data that wasn’t returned yet.
+
+	2. while (!ft_strchr(stash, '\n'))
+
+		- Keep reading from the file until you find a newline in the stash.
+
+		- If stash already has a newline, we can skip reading.
+
+	3. read(fd, buffer, BUFFER_SIZE)
+
+		- Reads a chunk of bytes from the file.
+
+		- bytes_read tells you how many bytes were actually read.
+
+		- Add '\0' at the end so you can treat buffer as a string.
+
+	4. stash = ft_strjoin(stash, buffer);
+
+		- Append new data to the stash.
+
+		- This is why you accumulate data across multiple reads.
+
+	5. Check if stash is empty or NULL
+
+		- If yes → return NULL (nothing to read, EOF reached).
+
+	6. Extract and return the line
+
+		- extract_line(stash) → gives you the line (including \n).
+
+		- update_stash(stash) → removes the returned line from stash for next call.
+
+
+
+4️⃣ How helpers usually work
+
+	extract_line(stash)
+
+		- Finds the first \n in the stash.
+
+		- Copies everything up to and including \n.
+
+		- Returns this as the line to the user.
+
+	update_stash(stash)
+
+		- Removes the line returned by extract_line.
+
+		- Keeps leftover bytes in stash.
+
+		- Example: stash = "World\n42\n", line = "World\n", updated stash = "42\n"
+
+	ft_strjoin(stash, buffer)
+
+		- Allocates a new string containing stash + buffer.
+
+		- Frees old stash.
+
+		- Returns new stash.
+
+
+
+5️⃣ Visual example
+
+	File content:
+
+		Hello\nWorld\n
+
+
+	- BUFFER_SIZE = 5
+
+	First call to get_next_line:
+
+		1. Read 5 bytes: "Hello" → stash = "Hello"
+
+		2. Read next 5 bytes: "\nWorl" → stash = "Hello\nWorl"
+
+		3. Found \n → extract line "Hello\n", update stash → "Worl"
+
+	Second call:
+
+		1. Stash = "Worl"
+
+		2. Read next 5 bytes: "d\n" → stash = "World\n"
+
+		3. Found \n → extract line "World\n", update stash → "" (empty)
+
+	Third call:
+
+		- Read returns 0 → EOF
+
+		- Stash empty → return NULL
+
+
+
+6️⃣ Key points to remember
+
+	1. read() is the only way get_next_line gets new data from the file.
+
+	2. stash is what lets you accumulate bytes across multiple calls.
+
+	3. Each call to get_next_line returns exactly one line, handling partial reads automatically.
+
+	4. Memory management is tricky:
+
+		- Free old buffers after joining
+
+		- Avoid memory leaks for leftover stash

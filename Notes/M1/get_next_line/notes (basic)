@@ -1,0 +1,106 @@
+🔁 1. “Repeated calls should let you read the file one line at a time”
+
+	If you call get_next_line(fd) again and again, it should give you:
+
+		- first call → the 1st line
+
+		- second call → the 2nd line
+
+		- third call → the 3rd line
+
+		- and so on…
+
+	until there is no more text to read.
+
+
+📤 2. “Your function should return the line that was read. If nothing is left or there is an error, return NULL.”
+
+	- If your function reads a line → return that line (as a char *)
+
+	- If the file is finished → return NULL
+
+	- If something goes wrong (read error) → return NULL
+
+
+⌨️ 3. “Your function should work with both a file and standard input.”
+
+	get_next_line() must work when reading:
+
+		- from a file you open with open()
+
+		- from stdin (keyboard input), file descriptor 0
+
+	So you can type text and it should read one line at a time.
+
+
+↩️ 4. “The returned line should include the newline character \n, except at the end of file.”
+
+		Example file content:
+
+			Hello\n
+			World\n
+			End
+
+
+		get_next_line() should return:
+
+		1. "Hello\n"
+
+		2. "World\n"
+
+		3. "End" ← no \n because the file did not end with one
+
+
+📄 5. “Your header file get_next_line.h must contain the prototype.”
+
+	Your get_next_line.h must have at least:
+
+		char *get_next_line(int fd);
+
+
+	This tells the compiler the function exists.
+
+
+🛠️ 6. “Add all helper functions to get_next_line_utils.c”
+
+	If you write small helper functions such as:
+
+	- ft_strlen
+
+	- ft_strchr
+
+	- ft_strjoin
+
+	- etc.
+
+	These must be placed in get_next_line_utils.c.
+
+
+⭐ In short:
+
+	You must write a function that:
+
+	✔ reads a file line by line
+	✔ returns one line per call
+	✔ includes the \n when it exists
+	✔ returns NULL when done
+	✔ works for files and standard input
+	✔ uses a header file and a utils file
+	
+	
+	
+	✔️ Example in plain English
+	
+			fd = open("hello.txt", O_RDONLY);
+
+
+		This does not give you the text.
+
+		It gives you a handle so you can later say:
+
+			read(fd, buffer, BUFFER_SIZE);
+
+
+		and the OS returns chunks of the file.
+
+	get_next_line() simply wraps this process and returns one line at a time.

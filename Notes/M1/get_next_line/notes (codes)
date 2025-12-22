@@ -1,0 +1,314 @@
+	✅ A simplified version
+
+		– super easy to read
+		– not the most optimized, but perfectly correct
+		– perfect for learning
+
+
+	✅ A complete (fully standard) version
+
+		– same logic you’ll see in many 42 solutions
+		– includes all helper functions
+		– handles all edge cases
+		– Moulinette-compatible
+
+Since you asked “what is the complete or simplified version?”, I’ll give you both, starting with the simple one.
+
+
+
+🌱 1. Simplified Version (Beginner-friendly)
+
+This version is intentionally written to be easy to understand.
+It does not handle every small edge case perfectly, but it works.
+
+get_next_line.c
+
+#include "get_next_line.h"
+
+char	*get_next_line(int fd)
+{
+	static char *storage = NULL;
+	char		buffer[BUFFER_SIZE + 1];
+	char		*newline_pos;
+	char		*line;
+	int			bytes;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+
+	// keep reading until we find a newline or reach EOF
+	while (!(newline_pos = ft_strchr(storage, '\n')))
+	{
+		bytes = read(fd, buffer, BUFFER_SIZE);
+		if (bytes <= 0)
+			break;
+		buffer[bytes] = '\0';
+		storage = ft_strjoin(storage, buffer);
+	}
+
+	if (!storage || *storage == '\0')
+		return (NULL);
+
+	line = extract_line(storage);
+	storage = remove_line_from_storage(storage);
+	return (line);
+}
+
+
+get_next_line_utils.c
+
+#include "get_next_line.h"
+
+int	ft_strlen(char *s)
+{
+	int i = 0;
+	if (!s) return 0;
+	while (s[i]) i++;
+	return i;
+}
+
+char	*ft_strchr(char *s, int c)
+{
+	if (!s) return NULL;
+	while (*s)
+	{
+		if (*s == (char)c)
+			return (s);
+		s++;
+	}
+	return NULL;
+}
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	int		len = ft_strlen(s1) + ft_strlen(s2);
+	char	*new = malloc(len + 1);
+	int		i = 0;
+
+	if (!new) return NULL;
+	while (s1 && *s1)
+		new[i++] = *s1++;
+	while (s2 && *s2)
+		new[i++] = *s2++;
+	new[i] = '\0';
+	return (new);
+}
+
+char	*extract_line(char *storage)
+{
+	int		len = 0;
+	char	*line;
+
+	while (storage[len] && storage[len] != '\n')
+		len++;
+
+	if (storage[len] == '\n')
+		len++; // include newline
+
+	line = malloc(len + 1);
+	for (int i = 0; i < len; i++)
+		line[i] = storage[i];
+	line[len] = '\0';
+	return (line);
+}
+
+char	*remove_line_from_storage(char *storage)
+{
+	int		i = 0;
+	int		j = 0;
+	char	*new_storage;
+
+	while (storage[i] && storage[i] != '\n')
+		i++;
+	if (!storage[i]) // no leftover
+	{
+		free(storage);
+		return NULL;
+	}
+	i++; // skip newline
+
+	new_storage = malloc(ft_strlen(storage + i) + 1);
+	while (storage[i])
+		new_storage[j++] = storage[i++];
+	new_storage[j] = '\0';
+
+	free(storage);
+	return new_storage;
+}
+
+
+get_next_line.h
+
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
+
+# include <stdlib.h>
+# include <unistd.h>
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
+char	*get_next_line(int fd);
+int		ft_strlen(char *s);
+char	*ft_strchr(char *s, int c);
+char	*ft_strjoin(char *s1, char *s2);
+char	*extract_line(char *storage);
+char	*remove_line_from_storage(char *storage);
+
+#endif
+
+
+
+🌳 2. Complete Version (Clean, compact, 42-style)
+
+This version is:
+
+✔ fully functional
+✔ safe
+✔ Moulinette-friendly
+✔ same structure most students use
+
+get_next_line.c
+
+#include "get_next_line.h"
+
+static char	*read_and_store(int fd, char *storage)
+{
+	char	buffer[BUFFER_SIZE + 1];
+	int		bytes;
+
+	bytes = 1;
+	while (!ft_strchr(storage, '\n') && bytes > 0)
+	{
+		bytes = read(fd, buffer, BUFFER_SIZE);
+		if (bytes < 0)
+			return (NULL);
+		buffer[bytes] = '\0';
+		storage = ft_strjoin(storage, buffer);
+	}
+	return (storage);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*storage;
+	char		*line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+
+	storage = read_and_store(fd, storage);
+	if (!storage)
+		return (NULL);
+
+	line = extract_line(storage);
+	storage = remove_line_from_storage(storage);
+	return (line);
+}
+
+
+get_next_line_utils.c
+
+#include "get_next_line.h"
+
+int	ft_strlen(char *s)
+{
+	int	i = 0;
+	if (!s)
+		return (0);
+	while (s[i])
+		i++;
+	return (i);
+}
+
+char	*ft_strchr(char *s, int c)
+{
+	if (!s)
+		return (0);
+	while (*s)
+	{
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
+	}
+	return (NULL);
+}
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	char	*new;
+	int		i = 0;
+	int		j = 0;
+
+	new = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!new)
+		return (NULL);
+	while (s1 && s1[i])
+	{
+		new[i] = s1[i];
+		i++;
+	}
+	while (s2 && s2[j])
+		new[i++] = s2[j++];
+	new[i] = '\0';
+	free(s1);
+	return (new);
+}
+
+char	*extract_line(char *storage)
+{
+	int		i = 0;
+	char	*line;
+
+	if (!storage || !storage[0])
+		return (NULL);
+
+	while (storage[i] && storage[i] != '\n')
+		i++;
+	if (storage[i] == '\n')
+		i++;
+
+	line = malloc(i + 1);
+	if (!line)
+		return (NULL);
+
+	for (int j = 0; j < i; j++)
+		line[j] = storage[j];
+	line[i] = '\0';
+	return (line);
+}
+
+char	*remove_line_from_storage(char *storage)
+{
+	int		i = 0;
+	int		j = 0;
+	char	*new;
+
+	while (storage[i] && storage[i] != '\n')
+		i++;
+	if (!storage[i])
+	{
+		free(storage);
+		return (NULL);
+	}
+	i++; // skip newline
+
+	new = malloc(ft_strlen(storage + i) + 1);
+	if (!new)
+		return (NULL);
+	while (storage[i])
+		new[j++] = storage[i++];
+	new[j] = '\0';
+
+	free(storage);
+	return (new);
+}
+
+get_next_line.h (same as before)
+
+🌟 Which one should you use?
+
+	If you want to learn how GNL works → use the simplified version.
+
+	If you want to submit to 42/Moulinette → use the complete version.

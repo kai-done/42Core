@@ -1,0 +1,96 @@
+1. “Because you will have to read files in get_next_line(), add this option: -D BUFFER_SIZE=n”
+
+	Your get_next_line() uses a buffer to read from a file.
+	The buffer size must not be hardcoded in your code.
+
+	Instead, when you compile the program, you will choose the size of the buffer:
+
+		cc -D BUFFER_SIZE=42 ...
+
+
+	This means BUFFER_SIZE = 42 while compiling.
+
+
+2. “The buffer size value will be adjusted by peer evaluators and Moulinette”
+
+	The testers will compile your code with many different values:
+
+		- BUFFER_SIZE=1
+
+		- BUFFER_SIZE=5
+
+		- BUFFER_SIZE=5000
+
+		- BUFFER_SIZE=100000
+
+	Your code must work with any buffer size.
+
+
+3. “We must be able to compile with and without the -D BUFFER_SIZE flag”
+
+	That means:
+
+		✔ With the flag:
+			cc -D BUFFER_SIZE=42 your_files.c
+
+		✔ Without the flag:
+			cc your_files.c
+
+
+		So you must give BUFFER_SIZE a default value in your header:
+
+			#ifndef BUFFER_SIZE
+			# define BUFFER_SIZE 42
+			#endif
+
+
+	If the compiler does not give a value, the code uses 42.
+
+
+4. Example compiler command
+
+		cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 <files>.c
+
+
+	This is exactly how the tester might compile your program.
+
+
+5. “Undefined behavior if the file is modified while reading it”
+
+	If you are reading a file and someone changes that file at the same time, then:
+
+		- get_next_line() may return weird lines
+
+		- the behavior is not defined
+
+		- you do not need to handle this case
+
+	This is normal — even real programs behave unpredictably if files change mid-read.
+
+
+6. “Undefined behavior when reading a binary file”
+
+	Binary files (like .png, .mp3, .pdf) contain data that:
+
+		- may not have \n at all
+
+		- may contain weird non-text bytes
+
+		- may contain null bytes (\0) inside
+
+	Your function is not required to work correctly with such files.
+
+	But if you want, you can try to handle them in a logical way — it is optional.
+
+
+⭐ Very short summary
+
+	- BUFFER_SIZE is chosen when compiling, not inside your code.
+
+	- Testers will try many values — your code must work for all of them.
+
+	- You must provide a default BUFFER_SIZE if no value is given.
+
+	- Changing the file while reading = unpredictable behavior.
+
+	- Reading binary files = unpredictable behavior unless you handle it.
