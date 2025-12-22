@@ -1,0 +1,122 @@
+1. Operating System:
+
+	- Choose between:
+
+		- Latest stable Debian (recommended for beginners).
+
+		- Latest stable Rocky (more complex).
+
+	- No graphical interface (no X.org, Wayland, or similar).
+
+
+2. Security:
+
+	- SSH setup:
+
+		- SSH must run on port 4242.
+
+		- Root login via SSH must be disabled.
+
+		- You’ll be asked to configure SSH and create a new user during your review.
+
+	- Firewall:
+
+		- Only port 4242 should be open (UFW for Debian, firewalld for Rocky).
+
+		- Ensure the firewall is active when the VM starts.
+
+
+3. User and Password Setup:
+
+	- Create a user with your login ending in 42 (e.g., wil42).
+
+	- The user must belong to the user42 and sudo groups.
+
+	- Strong password policy:
+
+		- Passwords expire every 30 days.
+
+		- Minimum 10 characters; must include uppercase, lowercase, and numbers.
+
+		- Passwords cannot contain user’s name or have more than 3 identical consecutive characters.
+
+		- Root password also needs to follow this policy.
+
+	- Configure sudo:
+
+		- Limit 3 incorrect password attempts.
+
+		- Custom error message for failed sudo attempts.
+
+		- Log sudo actions (inputs and outputs) in /var/log/sudo/.
+
+		- Restrict sudo path to: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin.
+
+
+4. Encryption & Disk Setup:
+
+	- Create at least 2 encrypted partitions using LVM (Logical Volume Management).
+
+	- Choose appropriate disk sizes to avoid waste and ensure good operation.
+
+
+5. Additional Configurations:
+
+	- SELinux (for Rocky) or AppArmor (for Debian) must be running and configured properly.
+
+	- Set your VM’s hostname to your login name + 42 (e.g., wil42).
+
+
+6. Bash Script (monitoring.sh):
+
+	- Create a bash script called monitoring.sh to display system information every 10 minutes.
+
+	- Information displayed should include:
+
+		- OS architecture and kernel version.
+
+		- Number of physical and virtual CPUs.
+
+		- Memory and disk usage as a percentage.
+
+		- CPU load.
+
+		- Last reboot time.
+
+		- LVM status (active or not).
+
+		- Number of active connections and users.
+
+		- Server's IPv4 and MAC address.
+
+		- Number of sudo commands executed.
+
+	- The script should run at startup and display the information via wall (used for broadcasting messages).
+
+	- Test the script during peer review, including interrupting it.
+
+
+7. Important Notes:
+
+	- Peer Review: During the peer review, you'll be asked to explain your configurations, create a new user, and interrupt the script.
+
+	- Ensure the script does not show any errors and works as expected.
+
+
+Summary of Tasks:
+
+	1. Set up Debian or Rocky without graphical interface.
+
+	2. Disable root login via SSH, enable SSH on port 4242.
+
+	3. Set up the firewall to allow only port 4242.
+
+	4. Create a user with strong password policies.
+
+	5. Configure sudo with restrictions and logging.
+
+	6. Set up encrypted partitions using LVM.
+
+	7. Configure SELinux or AppArmor.
+
+	8. Write and configure a bash script to monitor system information.
