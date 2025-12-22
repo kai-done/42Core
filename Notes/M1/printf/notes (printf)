@@ -1,0 +1,250 @@
+How printf works:
+
+At a high level, printf takes a format string and then processes it character by character. If it finds a special character (like %), it interprets that as a conversion specifier and handles it accordingly by extracting values from the arguments passed to it.
+
+		Here’s an example of a simple printf call:
+
+			int number = 42;
+			printf("The answer is: %d\n", number);
+
+
+Step 1: Format String
+
+	- The format string in this case is "The answer is: %d\n".
+
+	- The %d is a placeholder for the integer value (42 in this case).
+
+Step 2: Identify Specifiers
+
+	- printf identifies the % character, and it knows that the next character will be a specifier (d, in this case, which means "decimal integer").
+
+Step 3: Process the Specifier
+
+	- After identifying the specifier, printf looks at the corresponding argument (in this case, the integer 42).
+
+	- It converts this argument to its string representation (e.g., "42").
+
+	- Then it prints that string in place of the %d in the output.
+
+Step 4: Print Normal Text
+
+	- Any characters in the format string that are not % (like The answer is:) are printed directly.
+
+Step 5: Return the Count
+
+	- Finally, printf returns the number of characters printed.
+
+
+
+What happens behind the scenes in printf:
+
+Internally, printf does the following:
+
+	1. Format Parsing: It parses through the format string and looks for %. When it encounters %, it tries to figure out which specifier is next (e.g., d, s, x, etc.).
+
+	2. Argument Extraction: It uses a variable argument list (va_list, va_start, va_arg) to extract the corresponding argument based on the specifier.
+
+	3. Conversion: It converts the argument to the appropriate string format (e.g., integer to string, pointer to hexadecimal, etc.).
+
+	4. Printing: It then prints the result to standard output (using write() or fputs() internally, depending on the implementation).
+
+	5. Return Count: Finally, it counts and returns how many characters were printed.
+	
+
+
+Core Structure of ft_printf:
+
+To implement ft_printf, you’ll need to process the format string character by character, and when you encounter %, you’ll look for a conversion specifier. Each specifier corresponds to a different type of argument.
+
+Here’s the basic flow you’ll implement:
+
+1. Process the Format String:
+
+	Loop through the format string character by character. For each character:
+
+		- If it’s not %, print it directly.
+
+		- If it’s %, process the specifier that follows.
+
+2. Handle Specifiers:
+
+	For each specifier, you need to handle a specific type of argument:
+
+		- %c: Print a character.
+
+		- %s: Print a string.
+
+		- %p: Print a pointer in hexadecimal format.
+
+		- %d / %i: Print a signed integer in decimal format.
+
+		- %u: Print an unsigned integer.
+
+		- %x: Print a number in hexadecimal (lowercase).
+
+		- %X: Print a number in hexadecimal (uppercase).
+
+		- %%: Print a literal % sign.
+
+3. Return the Number of Characters Printed:
+
+	After processing all characters and arguments, return the total count of characters printed.
+
+
+
+Helper Functions You'll Likely Need:
+
+Since ft_printf will have different ways to print various data types, it's a good idea to break down the code into smaller, manageable pieces. Here are the helper functions that are commonly needed for this task:
+
+	1. ft_print_char (Handle %c):
+
+		- This function will handle printing a single character.
+
+		- Use write(1, &char, 1) to print it to the screen.
+
+			int ft_print_char(char c)
+			{
+			    write(1, &c, 1);
+			    return 1;
+			}
+
+
+	2. ft_print_string (Handle %s):
+
+		- This function will print a string (until a null terminator).
+
+		- Use write(1, string, length) to print the string.
+
+			int ft_print_string(const char *str)
+			{
+			    int len = 0;
+			    while (str[len])
+			        len++;
+			    write(1, str, len);
+			    return len;
+			}
+
+
+	3. ft_print_number (Handle %d, %i):
+
+	- Convert an integer to its string representation and print it.
+
+	- Use itoa() or manually convert the number to a string.
+
+			int ft_print_number(int n)
+			{
+			    char str[20];
+			    int len = sprintf(str, "%d", n);
+			    write(1, str, len);
+			    return len;
+			}
+
+
+	4. ft_print_unsigned (Handle %u):
+
+		- Print an unsigned integer, similar to how you’d print a signed integer, but without handling negative numbers.
+
+	5. ft_print_hex (Handle %x and %X):
+
+		- Convert a number to its hexadecimal representation.
+
+		- Handle both lowercase (%x) and uppercase (%X) hex formats.
+
+			int ft_print_hex(unsigned int num, char format)
+			{
+			    // Use itoa or convert to hex string and print it
+			}
+
+
+	6. ft_print_pointer (Handle %p):
+
+		- Print a pointer address in hexadecimal format.
+
+		- Prepend 0x to the address.
+
+			int ft_print_pointer(void *ptr)
+			{
+			    unsigned long long address = (unsigned long long)ptr;
+			    // Print address as hexadecimal with '0x' prefix
+			}
+
+
+	7. ft_print_percent (Handle %%):
+
+		- This one is easy: just print a single % character.
+
+			int ft_print_percent(void)
+			{
+			    write(1, "%", 1);
+			    return 1;
+			}
+
+
+	8. handle_conversion (Centralized Handling of Specifiers):
+
+		- This function takes the specifier (like d, s, etc.) and calls the appropriate helper function.
+
+			int handle_conversion(char specifier, va_list args)
+			{
+			    if (specifier == 'c') return ft_print_char(va_arg(args, int));
+			    else if (specifier == 's') return ft_print_string(va_arg(args, char *));
+			    else if (specifier == 'd' || specifier == 'i') return ft_print_number(va_arg(args, int));
+			    else if (specifier == 'u') return ft_print_unsigned(va_arg(args, unsigned int));
+			    else if (specifier == 'x') return ft_print_hex(va_arg(args, unsigned int), 'x');
+			    else if (specifier == 'X') return ft_print_hex(va_arg(args, unsigned int), 'X');
+			    else if (specifier == 'p') return ft_print_pointer(va_arg(args, void *));
+			    else if (specifier == '%') return ft_print_percent();
+			    return 0;
+			}
+
+
+
+	Final Structure of ft_printf:
+	
+		int ft_printf(const char *format, ...)
+		{
+		    va_list args;
+		    int count = 0;
+		    int i = 0;
+
+		    va_start(args, format);
+
+		    while (format[i])
+		    {
+		        if (format[i] == '%')
+		        {
+		            i++;
+		            count += handle_conversion(format[i], args);
+		        }
+		        else
+		        {
+		            write(1, &format[i], 1);
+		            count++;
+		        }
+		        i++;
+		    }
+
+		    va_end(args);
+		    return count;
+		}
+
+
+
+	Summary of Needed Helper Functions:
+
+		- ft_print_char()
+
+		- ft_print_string()
+
+		- ft_print_number()
+
+		- ft_print_unsigned()
+
+		- ft_print_hex()
+
+		- ft_print_pointer()
+
+		- ft_print_percent()
+
+		- handle_conversion()
+

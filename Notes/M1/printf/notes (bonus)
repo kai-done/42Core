@@ -1,0 +1,151 @@
+Hidden or Subtle Features to Consider in a Custom printf
+
+1. Length Modifiers (e.g., l, hh, ll):
+
+	- The standard printf supports length modifiers that alter how the argument is treated based on its size or type. For example:
+
+		- %d (default: int)
+
+		- %ld (long integer)
+
+		- %lld (long long integer)
+
+		- %hd (short integer)
+
+		- %hhd (char)
+
+	- If you're implementing printf on your own, you'll need to interpret these length modifiers correctly to ensure you're pulling the correct type from the variable argument list.
+
+		Example:
+
+			printf("%d", 42);      // int
+			printf("%ld", 42L);    // long int
+			printf("%lld", 42LL);  // long long int
+
+
+	What to implement: You'll need to detect these length modifiers and adjust how you fetch and convert the argument. This is done using va_arg() with the correct type (e.g., long int, short int, char).
+
+2. Flags (e.g., -, +, 0, #):
+
+	- printf allows various flags to modify the output format:
+
+		-: Left-justify the output within the given width.
+
+		+: Always print a sign for numeric values (positive or negative).
+
+		0: Pad the output with leading zeros instead of spaces.
+
+		#: Special handling for octal and hexadecimal (e.g., 0x for hexadecimal, 0 for octal).
+
+	- For example, %05d would pad an integer with zeros to a width of 5.
+
+		Example:
+
+			printf("%05d", 42);    // Outputs: "00042"
+			printf("%+d", 42);     // Outputs: "+42"
+			printf("%#x", 255);    // Outputs: "0xff"
+
+
+	What to implement:
+
+		- Detect and handle these flags.
+
+		- Adjust formatting logic accordingly, such as padding or adding prefixes (e.g., + or 0x).
+
+3. Width and Precision:
+
+	- printf allows you to specify the minimum width for output (%10d means the integer should take up at least 10 characters of space).
+
+	- Precision affects the number of digits after the decimal for floating-point numbers (%.2f).
+
+	- Width and precision can also apply to strings, truncating them if necessary (%.5s means only the first 5 characters of the string).
+
+		Example:
+
+			printf("%10d", 42);    // Outputs: "        42" (padded with spaces)
+			printf("%.2f", 3.14159); // Outputs: "3.14" (precision applied)
+			printf("%.5s", "Hello World"); // Outputs: "Hello" (precision applied to string)
+
+
+	What to implement:
+
+		- You’ll need to parse and interpret the width and precision values.
+
+		- Format numbers and strings to fit within the specified width or precision.
+
+		- Handle padding (with spaces or zeros) as needed.
+
+4. Type-Specific Modifications:
+
+	- For specifiers like %f, %e, and %g (floating-point numbers), printf applies specific rules for formatting and rounding. For example:
+
+		- %f: Fixed-point notation (e.g., 3.14159).
+
+		- %e: Scientific notation (e.g., 3.14159e+00).
+
+		- %g: Automatically chooses between fixed-point or scientific notation depending on the number's magnitude.
+
+	- If the number is very small or very large, printf may switch between %f and %e automatically, depending on the precision and value.
+
+	What to implement:
+
+		- Handle formatting for floating-point numbers, including converting them to fixed-point or scientific notation as needed.
+
+		- Implement rounding rules, especially when dealing with precision.
+
+5. Escape Sequences:
+
+	- printf supports escape sequences like \n (newline), \t (tab), \\ (backslash), etc., which are used in the format string.
+
+	- For example, "\n" outputs a newline, "\t" outputs a tab character.
+
+		Example:
+
+			printf("Hello\nWorld!\n"); // Outputs:
+			// Hello
+			// World!
+
+
+	What to implement:
+
+		- You need to interpret escape sequences in the format string and convert them into their respective characters.
+
+6. Handling NULL for Strings:
+
+	- When printing strings with %s, printf gracefully handles NULL by printing (null) or an empty string, depending on the implementation.
+
+	What to implement:
+
+		- Check if the argument for %s is NULL, and output a default string like (null) or handle it as an empty string.
+
+7. Returning the Number of Printed Characters:
+
+	- Standard printf returns the number of characters printed. This is useful if you need to know how much data was written.
+
+	 What to implement:
+
+		- Return the number of characters that were written as a result of the formatting.
+
+			int n = printf("Hello %s", "world");
+			// n should be 12 (i.e., "Hello world" + newline)
+
+
+	What to implement:
+
+		- Keep a counter to track how many characters have been printed, and return that value.
+
+8. Support for %n:
+
+	- The %n format specifier is used to store the number of characters printed so far into a variable provided by the user.
+
+	- This is a bit tricky because it doesn’t output anything, but rather stores the count.
+
+		Example:
+
+			int count;
+			printf("Hello%n", &count);  // count will be set to 5
+
+
+		What to implement:
+
+			- When encountering %n, store the current count of printed characters in the provided variable.

@@ -1,0 +1,95 @@
+need to check for the number of things printed for printf, but it doesn't need to be printed, unless asked to, for example in a code like this: int check = simple_printf("hello i am %d years old", 6);
+
+
+
+Core Elements Of Printf:
+
+To build a custom printf, you'll need to address several essential components:
+
+1. Format String:
+
+	- The format string tells printf how to display the arguments.
+
+	- It can contain text, along with special format specifiers like %d for integers, %f for floating-point numbers, %s for strings, etc.
+
+	- Example: "The value is: %d and %f"
+
+2. Variable Arguments:
+
+	- printf can accept a variable number of arguments, which are specified after the format string.
+
+	- You'd use C's stdarg.h functions (va_start, va_arg, va_end) to handle this.
+
+3. Format Specifiers:
+
+	- Format specifiers are placeholders in the format string (like %d, %s, %f) that tell printf what type of data to expect and how to format it.
+
+	- You'll need to parse these specifiers and convert the arguments accordingly.
+
+4. Type Handling:
+
+	- Different specifiers represent different types of data: %d for integers, %f for floats, %s for strings, %x for hexadecimal, etc.
+
+	- You'll need to handle each type and convert it to a string representation.
+
+5. Output (Printing):
+
+	- Once the arguments are formatted, they need to be written to the standard output, which is commonly done using the write() system call (or fputs, puts, etc.).
+	
+
+
+Basic Structure of a Custom printf:
+
+When you implement your own version of printf, you need to:
+
+1. Parse the format string:
+
+	- Loop through the string and identify format specifiers (%d, %s, %f, etc.).
+
+2. Process the Arguments:
+
+	- Use va_start to initialize a va_list and access the variable arguments.
+
+	- Use va_arg to retrieve each argument based on the specifier.
+
+3. Handle Conversion:
+
+	- For each specifier, convert the corresponding argument to a string.
+
+	- For example, %d needs to be converted to an integer string, %f needs to be converted to a float string, etc.
+
+4. Write the Output:
+
+	- Output the formatted string using write() or another output function (e.g., fputs()).
+
+
+
+High-Level Steps for a Simple printf:
+
+1. Start with parsing the format string.
+
+2. Identify format specifiers (e.g., %d, %s).
+
+3. For each format specifier:
+
+	- Retrieve the corresponding argument using va_arg.
+
+	- Convert the argument to a string if necessary (e.g., itoa for integers, gcvt or sprintf for floats).
+
+4. Output the result:
+
+	- If it's plain text, print it as-is.
+
+	- If it's a formatted argument, print the converted value.
+
+5. Repeat until all specifiers and characters in the format string are processed.
+
+
+
+What You'll Need to Implement:
+
+1. Parse the Format String: Detect when a format specifier appears (e.g., %d, %s), and handle it.
+
+2. Convert Data: Depending on the format specifier, convert the corresponding argument to a string (e.g., integer to string, float to string).
+
+3. Write Output: Use write() or similar to print the formatted result to stdout.
