@@ -1,0 +1,149 @@
+Iwtgu12345
+
+nano monitoring.sh
+
+architecture: uname -a 
+
+(the design of how the cpu works) (cpu is like the brain of the computer)
+
+Linux kkwek42 6.12.57+deb13-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.57-1 (2025-11-05) X86_64 GNU/Linux
+
+
+Physical cores: grep "physical id" /proc/cpuinfo | wc -l 
+
+(physical cores are in the cpu)
+(when asking for physical cores amount, it is the same as asking for how many processors are inside the cpu, similar to asking how many instructions the CPU can handle at the same time)
+
+2
+
+
+Virtual cores: grep processor /proc/cpuinfo | wc -l
+
+(make a single physical core appear like it's doing much more than one job at the same time)
+(making the physical core to act as though there are many other cores in it)
+
+2
+
+RAM: free
+(Random Access Memory) (have mem and swap)
+(it is temporary storage itself, the data stored in ram is deleted when computer is switch off)
+
+current available RAM --> 1739544 kb
+total RAM (mem) --> 2021028 kb    [free --mega | awk '$1 == "Mem:" {print $2}']
+used mem RAM --> 281484 kb  [free --mega | awk '$1 == "Mem:" {print $3}']
+utilization rate --> (used/total) x 100    
+[free --mega | awk '$1 == "Mem:" {printf("(%.2f%%)\n", $3/$2*100)}']
+
+
+Storage: df (disk free)
+(long term space to store files, programs and data) (keep data even when computer switch off)
+
+utilization rate --> 4%
+[df -m | grep "/dev/" | grep -v "/boot" | awk '{use += $3} {total += $2} END {printf("(%d%%)\n"), use/total*100}']
+total (kb) --> 24309200
+used (kb) --> 1022216
+
+grep -v "/boot": The -v flag makes grep invert the match (i.e., exclude lines containing /boot)
+END: The END block is part of the awk programming language. It’s used to specify actions that should happen after all the input has been processed.
+
+utalization rate of processors = CPU utilization rate : vmstat
+
+us: user CPU time			[0]
+sy: system CPU time			[0]
+id: idle CPU time			[100]
+wa: waiting for IO time		[0]
+
+CPU utilization = 100% - Idle%
+
+Low CPU utilization (near 0%) means your system is mostly idle and has resources to handle more tasks.
+High CPU utilization (near 100%) means the CPU is working at full capacity, which might slow down the system if more tasks are added.
+If CPU utilization is constantly high, it can indicate that your system is under heavy load, or there may be an inefficient process consuming too much CPU time.
+
+but what is wanted is the waiting time i guess...   [vmstat 1 4 | tail -1 | awk '{print 100 - $15}']
+idk anymore but the result from the code is 100...
+
+vmstat: The vmstat command reports information about system performance, including virtual memory, processes, CPU activity, etc.
+1: means the command will update every 1 second.
+4: means it will run for 4 iterations, providing data 4 times in total (one every second).
+
+tail -1: This command takes the output of the previous vmstat 1 4 command and gets only the last line (the final iteration of stats).
+
+oh... apparently i'm supposed to use the result gotten from the code and... 100 - result = cpu ult rate
+
+
+Date and Time of last reboot: uptime -s
+
+[who -b | awk '$1 == "system" {print $3 " " $4}']
+
+
+LVM (Logical Volume Manager) : sudo lvscan
+(storage manager in a sense... very flexible and dynamic...)
+
+[if [ $(lsblk | grep "lvm" | wc -l) -gt 0 ]; then echo yes; else echo no; fi]
+
+lsblk: The lsblk command lists all available block devices on your system (like hard drives, partitions, and other storage devices).
+$(...): The $() syntax is command substitution, which means that it runs the command inside and returns the result.
+[ ... ] (test condition): The square brackets [...] are used to test a condition in a shell script.
+if ... then ... else ... fi: This is the structure of an if-else statement in Bash.
+-gt: means "greater than" in Bash
+-gt 0: is checking if it's greater than 0
+
+lsblk | grep lvm
+
+** lsblk needed for bonus
+
+
+check active connections: who | wc -l
+check active unique users : who |awk '{print $1}' | sort | uniq | wc -l
+
+connections/sessions --> how many "seats" are being used
+users --> how many "people" are sitting, ignoring if someone is sitting in 2 seats
+
+who : lists all logged in-users and where
+awk '{print $1}' : takes only the username column
+sort | uniq : removes duplicates
+wc = word count : counts things in text, by default can count lines, words and characters
+-l : means "count the number of lines"
+
+
+IPv4 and Mac addresses:
+
+IPv4: ip -4 addr show enp0s3 | grep inet | awk '{print $2}' | cut -d/ -f1
+MAC: ip link show enp0s3 | grep ether | awk '{print $2}'
+
+IPv4: your "house address" on the internet
+MAC: your network card's "serial number"
+
+ip addr show : list all network interfaces and their info
+-4 : show only IPv4 addresses
+enp0s3 : show only info for this network interface
+
+| = "pipe" : send output of previous command to the next command
+grep inet : filter only lines containing inet
+
+awk : a tool to process columns of text
+{print $2} : to print the 2nd column of the line
+
+cut : split text into pieces
+-d/ : use / as the delimiter (splits 10.0.2.15/24 into 10.0.2.15 and 24) 
+-f1 : take the first piece
+
+ip link show : cleaner and more standard for MAC Addresses
+
+IPv4 + MAC : echo "IPv4: $(ip -4 addr show enp0s3 | grep inet | awk '{print $2}' | cut -d/ -f1)  MAC: $(ip link show enp0s3 | grep ether | awk '{print $2}')"
+
+
+number of commands executed with the sudo program: sudo journalctl | grep 'sudo' | wc -l
+
+(means it is checking how many times sudo is used or called, so anything like "sudo ..." will be counted)
+
+sudo : to access root/admin privileges to read system logs
+journalctl : a tool for reading the systemd journal, a big log of system events
+
+initial sudo running the command itself is not counted, as it is used to just run the command and read the logs
+
+journalctl _COMM=sudo | grep COMMAND | wc -l
+
+journalctl _COMM=sudo: This command filters logs from journalctl specifically for entries where the communication (_COMM) was made by the sudo command. This means the logs are limited to entries where sudo was actually run, which can be useful if you're specifically interested in actions that involved sudo commands.
+
+grep COMMAND: After getting the logs that involve sudo, this part filters those logs further to only include lines containing the word COMMAND. COMMAND here is likely meant to refer to the specific action that was executed by sudo, like apt-get update or any other command that was run via sudo.
