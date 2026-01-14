@@ -41,7 +41,9 @@ char	*join(char *s1, char *s2)
 char	*join_and_free(char *s1, char *s2)
 {
 	char	*s3;
-	
+
+	if (s1 == NULL)
+		s1 = 
 	s3 = join(s1, s2);
 	free(s1);
 	s1 = NULL;
@@ -88,7 +90,11 @@ char	*get_next_line(int fd)
 	{
 		buffer[byte_read] = '\0';
 		if (remainder)
+		{
 			line = join_and_free(line, remainder);
+			free(remainder);
+			remainder = NULL;
+		}
 		line = join_and_free(line, buffer);
 		while (line[i] != '\0' && line[i] != '\n')
 			i++;
@@ -99,12 +105,12 @@ char	*get_next_line(int fd)
 				remainder = duplicate(&line[i + 1]);
 				line[i + 1] = '\0';
 			}
-			return (line);
+			return (free(buffer), line);
 		}
 		byte_read = read(fd, buffer, BUFFER_SIZE);
 	}
 	
 	if (line != '\0' || byte_read != 0)
-		return (line);
+		return (free(buffer), line);
 	return (free(line), free(buffer), NULL);
 }
