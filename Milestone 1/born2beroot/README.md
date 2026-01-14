@@ -13,7 +13,7 @@
 *This project has been created as part of the 42 curriculum by kkwek.*
 
 Description: 
-
+Born2beroot is using a virtual machine to learn about system administration, linux security and basic server configurations.
 
 Instructions: 
 
