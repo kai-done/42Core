@@ -82,7 +82,6 @@ char	*get_next_line(int fd)
 	if (!buffer)
 		return (free(line), NULL);
 	byte_read = read(fd, buffer, BUFFER_SIZE);
-	if (read > 0)
 	
 	line[0] = '\0';
 	while (byte_read > 0)
