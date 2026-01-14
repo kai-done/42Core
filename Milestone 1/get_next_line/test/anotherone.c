@@ -12,6 +12,22 @@ int		length(char *s1)
 	return (i);
 }
 
+char	*duplicate(char *s1)
+{
+	int		i;
+	char	*s2;
+	
+	i = 0;
+	s2 = malloc(length(s1) + 1);
+	while (s1[i] != '\0')
+	{
+		s2[i] = s1[i];
+		i++;
+	}
+	s2[i] = '\0';
+	return (s2);
+}
+
 char	*join(char *s1, char *s2)
 {
 	char	*s3;
@@ -21,6 +37,9 @@ char	*join(char *s1, char *s2)
 
 	i = 0;
 	j = 0;
+
+	if (s1 == NULL)
+		s1 = duplicate("");
 	lens1 = length(s1);
 	s3 = malloc(lens1 + length(s2) + 1);
 	while (s1[i] != '\0')
@@ -42,28 +61,10 @@ char	*join_and_free(char *s1, char *s2)
 {
 	char	*s3;
 
-	if (s1 == NULL)
-		s1 = 
 	s3 = join(s1, s2);
 	free(s1);
 	s1 = NULL;
 	return (s3);
-}
-
-char	*duplicate(char *s1)
-{
-	int		i;
-	char	*s2;
-	
-	i = 0;
-	s2 = malloc(length(s1) + 1);
-	while (s1[i] != '\0')
-	{
-		s2[i] = s1[i];
-		i++;
-	}
-	s2[i] = '\0';
-	return (s2);
 }
 
 char	*get_next_line(int fd)
