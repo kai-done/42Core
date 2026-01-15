@@ -75,20 +75,17 @@ char	*get_next_line(int fd)
 	int			i;
 	int			byte_read;
 	
-	i = 0;
 	if (fd == -1 || BUFFER_SIZE <= 0)
 		return (NULL);	
-	line = malloc (BUFFER_SIZE + 1);
-	if (!line)
-		return (NULL);
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
-		return (free(line), NULL);
+		return (NULL);
 	byte_read = read(fd, buffer, BUFFER_SIZE);
-	
-	line[0] = '\0';
+
+	line = NULL;
 	while (byte_read > 0)
 	{
+		i = 0;
 		buffer[byte_read] = '\0';
 		if (remainder)
 		{
