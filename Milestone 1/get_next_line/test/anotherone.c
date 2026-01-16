@@ -21,6 +21,8 @@ char	*duplicate(char *s1)
 	char	*s2;
 	
 	i = 0;
+	if (s1 == NULL)
+		return (NULL);
 	s2 = malloc(length(s1) + 1);
 	if (s2 == NULL)
 		return (NULL);
@@ -82,6 +84,8 @@ char	*get_next_line(int fd)
 		return (NULL);
 	byte_read = read(fd, buffer, BUFFER_SIZE);
 
+	if (byte_read < 0)
+		return (free(buffer), NULL);
 	line = NULL;
 	while (byte_read > 0)
 	{
@@ -89,11 +93,15 @@ char	*get_next_line(int fd)
 		buffer[byte_read] = '\0';
 		if (remainder)
 		{
-			line = join(line, remainder);
+			line = duplicate(remainder);
 			free(remainder);
 			remainder = NULL;
+			if (line == NULL)
+				return (free(buffer), NULL);
 		}
 		line = join(line, buffer);
+		if (line == NULL)
+			return (free(buffer), NULL);
 		while (line[i] != '\0' && line[i] != '\n')
 			i++;
 		if (line[i] == '\n')
@@ -108,7 +116,7 @@ char	*get_next_line(int fd)
 		byte_read = read(fd, buffer, BUFFER_SIZE);
 	}
 	
-	if (line == NULL || line[0] == '\0')
+	if (line && line[0] != '\0')
 		return (free(buffer), line);
 	return (free(line), free(buffer), NULL);
 }
