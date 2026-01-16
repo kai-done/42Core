@@ -48,7 +48,7 @@ char	*join(char *s1, char *s2)
 	if (s1 == NULL)
 		s1 = duplicate("");
 	if (s1 == NULL || s2 == NULL)
-		return (NULL);
+		return (free(s1), NULL);
 	lens1 = length(s1);
 	s3 = malloc(lens1 + length(s2) + 1);
 	if (s3 == NULL)
@@ -109,6 +109,8 @@ char	*get_next_line(int fd)
 			if (line[i + 1] != '\0')
 			{
 				remainder = duplicate(&line[i + 1]);
+				if (remainder == NULL)
+					return (free(buffer), free(line), NULL);
 				line[i + 1] = '\0';
 			}
 			return (free(buffer), line);
