@@ -42,6 +42,12 @@ Afterwards, i added the codes all together, where i first worked on the main whi
        unaware of knowing how many arguments exist, unless the info is passed explicitly,
        using the wrong type with va_arg causes undefined behaviour
 
+2. Use of helper functions:
+   %d, %i, %c, %s, %%, %x, %X, %u, %p
+
+   %%; percentage
+   it just write out the % sign when %% is used
+
 Resources: listing classic references related to the topic (documen-
 tation, articles, tutorials, etc.), as well as a description of how AI was used —
 specifying for which tasks and which parts of the projectoh
