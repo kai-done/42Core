@@ -26,6 +26,22 @@ So i did the simple functions which were %c, %s, %d, %i and %%. They were to jus
 
 After all this is done, i realised something else after evaluting someone's printf. It was the fact that the code should also return out the number of characters being printed out, when asked to. So if printf is used while being declared in another variable, it should print out the number of characters that was printed out when printf was called earlier. So I had to revise my code to have it return the count of the characters being printed out when each function was called, without it actually printing out in the write function. It should only be printed out when printf is used with a variable and declared there. Then it gets printed out.
 
+Afterwards, i added the codes all together, where i first worked on the main while learning about va_list. Then i worked out how the code works and get collected and called in the va_list and va_start. Then i used va_list for the arguments and used va_start to call the arguments and the formatting. Using the specifier, i call va_arg for each of the different type of arguments used, along with the type of variable is used and called in the spcific helper functions. It sorts through the code by looking for % sign first, then look for the following character after. With the character that is found, it would go through the spcifier list and find the character which is defined. Once it does, it'll go through the helper function and write out the code that is given, while returning the number of characters that's been written out. If not, it'll write out the things that's been given. It'll keep going until the end of the code. Then it'll end of with va_end, since it'll close the va_list code, since it's been started of with va_start.
+
+1. Start of with learning about va_list:
+   va_list, va_start, va_arg, va_end
+   va_list is used for printf and it's arguments.
+
+   va_list: holds the variable arguments
+   va_start: initialize the arguement list
+   va_arg: fetches the next argument
+   va_end: cleans up
+
+     * to use it, it is important to know the type of each argument read,
+       arguments smaller than int(char, short) is promoted to int,
+       unaware of knowing how many arguments exist, unless the info is passed explicitly,
+       using the wrong type with va_arg causes undefined behaviour
+
 Resources: listing classic references related to the topic (documen-
 tation, articles, tutorials, etc.), as well as a description of how AI was used —
 specifying for which tasks and which parts of the projectoh
