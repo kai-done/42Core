@@ -48,6 +48,24 @@ Afterwards, i added the codes all together, where i first worked on the main whi
    %%; percentage
    it just write out the % sign when %% is used
 
+   %s: string
+   it writes out the string of the given input when called, used putstr for the code
+
+   %d & %i: digit and integer
+   it writes out the numbers given, and both uses putnbr to have the output written out, since it's in base 10
+
+   %c: character
+   it writes out the character using putchar
+
+   %u: unsigned decimal
+   it writes out the same as %i & %d, except that since it's unsigned, it's always positive, so it doesn't need to have the negative checker
+
+   %x & %X: base 16 lower and upper case
+   it writes out the number it receives and change it into base 16 and writes out what is given
+
+   %p: pointer
+   it writes out the address of the memory stored in the pointer, and using %x to write out the address 
+
 Resources: listing classic references related to the topic (documen-
 tation, articles, tutorials, etc.), as well as a description of how AI was used —
 specifying for which tasks and which parts of the projectoh
