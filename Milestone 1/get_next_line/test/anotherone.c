@@ -100,7 +100,7 @@ char	*get_next_line(int fd)
 		buffer[byte_read] = '\0';
 		line = join(line, buffer);
 		if (line == NULL)
-			return (free(buffer), NULL);
+			return (free(buffer), free(remainder), NULL);
 		while (line[i] != '\0' && line[i] != '\n')
 			i++;
 		if (line[i] == '\n')
@@ -119,5 +119,10 @@ char	*get_next_line(int fd)
 	
 	if (line && line[0] != '\0')
 		return (free(buffer), line);
+	if (remainder)
+	{
+		free(remainder);
+		remainder = NULL;
+	}
 	return (free(line), free(buffer), NULL);
 }
