@@ -1,4 +1,4 @@
-#include <stdio.h>
+  #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include "get_next_line.h"
@@ -90,26 +90,10 @@ char	*get_next_line(int fd)
 
 	if (remainder)
 	{
-		line = duplicate(remainder);
-		free(remainder);
+		line = remainder;
 		remainder = NULL;
-		if (line == NULL)
-			return (free(buffer), NULL);
 	}
-	i = 0;
-	while (line[i] != '\0' && line[i] != '\n')
-		i++;
-	if (line[i] == '\n')
-	{
-		if (line[i + 1] != '\0')
-		{
-			remainder = duplicate(&line[i + 1]);
-			if (remainder == NULL)
-				return (free(buffer), free(line), NULL);
-			line[i + 1] = '\0';
-		}
-			return (free(buffer), line);
-		
+
 	while (byte_read > 0)
 	{
 		i = 0;
