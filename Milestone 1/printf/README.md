@@ -52,7 +52,18 @@ Afterwards, i added the codes all together, where i first worked on the main whi
    it writes out the number it receives and change it into base 16 and writes out what is given
 
    %p: pointer
-   it writes out the address of the memory stored in the pointer, and using %x to write out the address 
+   it writes out the address of the memory stored in the pointer, and using %x to write out the address
+
+3. Combining it and making the main
+
+   int ft_printf(const char *format, ...)
+
+   ... is for the undefined amount of arguments that can be called and written out
+   const char* format: the format parameteer is a format string, it tells the functions what to print and how to interpret the additional arguments (...)
+   format is essentially what is written in the " " when printf is called
+
+   using a branched out helper function for the main for va_args for each of the different characters given with the % sign
+   the helper function of the main helps to call out to the other helper functions written that correlates to what is called
 
 Resources: listing classic references related to the topic (documen-
 tation, articles, tutorials, etc.), as well as a description of how AI was used —
