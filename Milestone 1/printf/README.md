@@ -53,8 +53,9 @@ Afterwards, i added the codes all together, where i first worked on the main whi
 
    %p: pointer
    it writes out the address of the memory stored in the pointer, and using %x to write out the address
+   C standards define &p to print addresses in lowercase hexadecimal: 0x + %x
 
-3. Combining it and making the main
+4. Combining it and making the main
 
    int ft_printf(const char *format, ...)
 
