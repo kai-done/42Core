@@ -44,6 +44,22 @@ Instructions:
    with it, it'll be easier to check for a new line with the if loop for next line to be safed to the remainder
    then reads through the file again, in case it hasn't reached the EOF or '\n', it'll read again so it can read till it reaches either EOF or '\n'
    
-7. Troubleshooting the codes and it's bugs
+6. Troubleshooting the codes and it's bugs
 
+   changed the helper functions that are being used
+   used: length, duplicate, join
+   duplicate uses length
+   join uses duplicate and length while freeing s1
+   for join, it duplicates an empty string if s1 is null, and returns null if either s1 or s2 is  null
+
+  bringing the if loop for the remainder out and before the while loop, using it to be the placed in the buffer if there is any remainder remaining, without affecting the malloced size of buffer, and uses the i copied over from buffer to remainder as the byte_read
+  else, byte_read would be gotten using the read function
+
+  if byte_read is 0, the remaining lines in the remainder would need to be freed and nulled
+  and once checking that a new line has been found, it needs to ensure that there isn't anything else after the '\n'
+  if there is something else after the '\n', it would be duplicated in to the remainder, and it's next line would be '\0', to ensure that when it is printed out, it doesn't print the things after the '\n'
+  needing to free everything that's been malloced, while making sure that i don't end up freeing things that aren't supposed to be freed
+  
 Resources:
+
+  - man page for read
