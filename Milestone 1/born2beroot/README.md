@@ -8,5 +8,15 @@ Instructions: 
 
   1. Download Debian and setting up of virtual machine
 
+     - setting up of hostname (name + 42)
+     - setting root password and username (42 username)
+     - setting up time zone clock
+     - partition disks for non-bonus (guided - use entire disk and set up encryted LVM), seperate / home partition
+     - Configure the package manager (no addditional packages required)
+     - Installing the GRUB boot in the hard disk
+    
+  2. 
+
 Resources: 
 
+  - born2beroot guide
