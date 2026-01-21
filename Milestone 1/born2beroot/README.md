@@ -15,8 +15,77 @@ Instructions: 
      - Configure the package manager (no addditional packages required)
      - Installing the GRUB boot in the hard disk
     
-  2. 
+  2. Login in to virtual machine and installing sudo
+
+     - login with encryption password
+     - login with root id & password
+    
+     - su is used to enter root
+     - installing sudo and rebooting it
+    
+     - sudo su: enter root
+     - sudo -V: verify sudo installation
+     - sudo adduser <username>: add user, <username> is the name of the user
+     - sudo addgroup <groupname>: add group, <groupname> is the name of the group
+     - getent group <groupname>: check group and the user in it, <groupname> is the name of the group
+     - sudo adduser <username> <groupname>: to add a user to the group, <username> is the name of the user, <groupname> is the name of the group
+     - groups <username>: check the groups the user is in, <username> is the name of the user
+     - sudo deluser <username>: delete a user, <username> is the name of the user
+     - sudo deluser <username> <groupname>: remove the user from the group, <username> name of the user, <groupname> name of the group
+     - sudo deluser --remove-home <username>: delete user and their home directory, <username> is the name of the user
+     - sudo deluser --remove-all-files <username>: delete the account and tries to remove all files owned by the user, including files outside /home, <username> is the name of the user
+    
+     - getent group <groupname>: groupname:password:GID, user1, user2, user3
+       - groupname: name of the group
+       - password (usually x): historical field, not used anymore
+       - GID: numeric group ID
+       - user1, user2, user3: supplementary group members
+
+  3. SSH: Secure Shell
+     a secure way to connect to another computer over a network and control it from the command line
+     SSH is a secure communication channel, it lets the user securely send commands and data between programs, not just open a remote terminal
+
+     two sides to SSH:
+       - client (ssh), prgram that runs to connect to another computer
+         - how your outgoing connections behave
+       - server (sshd), program that listens for incoming connections
+         - how your incoming connections behave
+
+     - Installing SSH first after updating the system
+     - sudo service ssh status
+     - modify both ssh config file in root [nano /etc/ssh/sshd_config] [nano /etc/ssh/ssh_config]
+     - sudo service ssh restart, and checking the status again
+     - adding the rule in the settings, at port forwarding, for both host and client
+     - ssh <user>@localhost -p 4242 [connect via SSH from our machine]
+    
+  4. UFW (Firewall)
+
+     UFW: Uncomplicated firewall
+       - it is a simmpler firewall, easier for admins to control Linux firewall rules
+       - it can be used on many different servers
+       - typically deny all incoming connections unless explicitly allowed
+       - can deny then allow a port, the port would become allowed, and vice versa
+
+     - Installing ufw with apt and enabling it
+     - allowing port 4242, meaning anyone can connect to the vm through port 4242, but still needing the username and password to log in
+     - sudo ufw allow 4242: allowing port 4242, connection attempts reach the server, then authentication happens
+     - sudo ufw delete allow 4242: deleting port 4242
+     - sudo ufw deny 4242: denying port 4242, attempted connections from the port, never reach the server
+     - sudo ufw status: checking the state of the firewall
+    
+  5. Sudo and password policies
+
+apt normally doesn't need to be downloaded as compared to aptitude
+apt is part of the base system for debian
+aptitude is a seperate package that uses apt underneath
+
+apt is the installer while aptitude is just another package
+apt and apt-get -> official, default
+aptitude -> alternate UI + dependancy resolver
 
 Resources: 
 
   - born2beroot guide
+  - markdown cheatsheet
+  - SSH manual
+  - man page
