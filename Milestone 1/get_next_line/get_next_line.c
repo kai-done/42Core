@@ -45,17 +45,36 @@ char	*during(int byte_read, char *line, char **remainder, char *buffer)
 	buffer[byte_read] = '\0';
 	line = join(line, buffer);
 	if (line == NULL)
-		return (NULL);
+		return (free(buffer), free(*remainder), NULL);
 	while (line[i] != '\0' && line[i] != '\n')
 		i++;
 	if (line[i] == '\n' && line[i + 1] != '\0')
 	{
 		*remainder = duplicate(&line[i + 1]);
 		if (*remainder == NULL)
-			return (NULL);
+			return (free(buffer), free(line), NULL);
 		line[i + 1] = '\0';
 	}
 	return (line);
+}
+
+
+void	cleanup(int byte_read, char **remainder, char *line, char *buffer)
+{
+	if (byte_read < 0)
+	{
+		if (*remainder)
+		{
+			free(*remainder);
+			*remainder = NULL;
+		}
+		free(buffer);
+	}
+	else 
+	{
+		free(line);
+		free(buffer);
+	}
 }
 
 char	*get_next_line(int fd)
@@ -71,24 +90,17 @@ char	*get_next_line(int fd)
 	if (!buffer)
 		return (NULL);
 	byte_read = before(&remainder, buffer, 0, fd);
-	if (byte_read < 0)
-	{
-		if (remainder)
-		{
-			free(remainder);
-			remainder = NULL;
-		}
-		return (free(buffer), NULL);
-	}
 	line = NULL;
 	while (byte_read > 0)
 	{
 		line = during(byte_read, line, &remainder, buffer);
 		if (line == NULL)
-			return (free(line), free(buffer), NULL);
+			return (NULL);
+		if (line[length(line) - 1] == '\n')
+			return (free(buffer), line);
 		byte_read = read(fd, buffer, BUFFER_SIZE);
 	}
 	if (line && line[0] != '\0')
 		return (free(buffer), line);
-	return (free(line), free(buffer), NULL);
+	return (cleanup(byte_read, &remainder, line, buffer), NULL);
 }
