@@ -21,11 +21,12 @@
 # include <stdint.h>
 # include <stddef.h>
 
+int		length(char *s1);
+int		loop(char *s1, char *s2, int i);
+int		before(char **remainder, char *buffer, int byte_read, int fd);
+char	*duplicate(char *s1);
+char	*join(char *s1, char *s2);
 char	*get_next_line(int fd);
-char	*ft_strdup(const char *s);
-char	*ft_strjoin(char const *s1, char const *s2);
-void	*ft_memcpy(void *dest, const void *src, size_t n);
-size_t	ft_strlen(const char *c);
-char	*join_and_free(char *s1, char *s2);
+char	*during(int byte_read, char *line, char **remainder, char *buffer);
 
 #endif 
