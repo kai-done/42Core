@@ -1,12 +1,12 @@
 *This project has been created as part of the 42 curriculum by kkwek.*
 
-Description: 
+**Description:**
 
 Printf is a function in <stdio.h> and is used to print things out. The goal is to recreate the basic function of printf with this project. It involves using va_list to make the code work out. va_list variable is used to hold arguments, and is used to take in more arguments, suitable for printf.
 
 It basically is to just recreate the simple functions of printf, like printing a string, integer, digit, percentage, etc.
 
-Instructions: 
+**Instructions:**
 
 I started off with recreating the functions first. I split the functions up into 3s, so i could deal with them part by part, without needing to look at the whole thing from the start, then i did putchar, which is to write out the results given.
 
@@ -66,8 +66,6 @@ Afterwards, i added the codes all together, where i first worked on the main whi
    using a branched out helper function for the main for va_args for each of the different characters given with the % sign
    the helper function of the main helps to call out to the other helper functions written that correlates to what is called
 
-Resources: listing classic references related to the topic (documen-
-tation, articles, tutorials, etc.), as well as a description of how AI was used —
-specifying for which tasks and which parts of the projectoh
+**Resources:** 
 
    - man page
