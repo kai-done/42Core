@@ -75,6 +75,56 @@ Instructions: 
     
   5. Sudo and password policies
 
+     Who is sudoers?: 
+       who is allowed to use sudo, and what they’re allowed to do with it.
+
+     usermod -aG sudo <username>:
+       “Add this user to the list allowed by sudoers.”
+
+     sudo → the tool
+     sudoers → the permission rules
+     sudo group → a shortcut into sudoers
+
+     small recap:
+     mkdir -> make directory
+     nano -> edit file
+     touch -> create file
+
+     /etc/sudoers       ← main sudo rules
+     /etc/sudoers.d/    ← folder for custom rules (extra sudo configs)
+     sudo_config        ← your custom config
+     /var/log/sudo      ← folder for sudo logs
+
+     - Defaults logfile="/var/log/sudo/sudo_config":
+         - Sets a main sudo log file where sudo will record commands.
+         - Tracks who ran sudo, what command, and when.
+
+     - Defaults log_input, log_output
+         - Enables full session recording:
+              - log_input  → records everything typed during a sudo session (like keystrokes)
+              - log_output → records everything displayed by the command
+         - Think of it as a “snooping camera” on the sudo session, not just a text command log.
+         - The logs are stored in iolog_dir (next line).
+         ⚠️:
+         - Can capture sensitive info typed in commands (including passwords if typed inside a program, not sudo itself).
+
+     - Defaults iolog_dir="/var/log/sudo"
+         - This is the directory where the full input/output logs go.
+         - Each sudo session creates a subdirectory with the logs.
+         - Every sudo session creates its own subdirectory in /var/log/sudo/.
+         - Inside that directory, sudo stores:
+             - iolog → everything you typed in that session
+             - iolog output → everything the command printed to the terminal
+         - If you run 10 sudo commands, you now have 10 session directories, each with multiple files.
+         - The logs can grow very quickly, especially if you run interactive commands or commands that produce a lot of output.
+      
+     In a sense:
+     - log_input = captures your hands on the keyboard
+     - log_output = captures the screen
+     - iolog_dir = where the footage is saved
+    
+     - 
+        
 apt normally doesn't need to be downloaded as compared to aptitude
 apt is part of the base system for debian
 aptitude is a seperate package that uses apt underneath
