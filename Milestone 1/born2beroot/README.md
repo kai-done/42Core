@@ -126,6 +126,9 @@ Instructions: 
      - Defaults requiretty
          - TTY: Teletype Terminal
         
+  6. Script
+
+
 apt normally doesn't need to be downloaded as compared to aptitude
 apt is part of the base system for debian
 aptitude is a seperate package that uses apt underneath
