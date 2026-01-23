@@ -1,10 +1,10 @@
 *This project has been created as part of the 42 curriculum by kkwek.*
 
-Description: char *get_next_line(int fd)
+**Description: char *get_next_line(int fd)***
 
 get_next_line is used to get the next line from the file given, and it'll return the current line from the file until it reaches the end of file (EOF) or '\n'. The first line can be printed out when the code is called with printf, and it'll continue on printing the next line when enter is pressed. If there is a '\n' halfway through the line, it'll return the first part of the line, save the second part, and combines the remainder with the next line, when get_next_line is called again.
 
-Instructions:
+**Instructions:**
 
 1. Understanding read:
   I first had to understand what read is and what it returns. 
@@ -15,9 +15,9 @@ Instructions:
   count: max number of bytes to read
 
   it's return values:
-  >0: signifys the number of bytes read
-  0: signifys EOF, and that there's nothing left to be read
-  -1: error
+  > 0: signifys the number of bytes read
+    0: signifys EOF, and that there's nothing left to be read
+   -1: error
 
   So read fills the buffer with the bytes that has been read.
 
@@ -60,6 +60,6 @@ Instructions:
   if there is something else after the '\n', it would be duplicated in to the remainder, and it's next line would be '\0', to ensure that when it is printed out, it doesn't print the things after the '\n'
   needing to free everything that's been malloced, while making sure that i don't end up freeing things that aren't supposed to be freed
   
-Resources:
+**Resources:**
 
   - man page for read
