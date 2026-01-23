@@ -123,7 +123,8 @@ Instructions: 
      - log_output = captures the screen
      - iolog_dir = where the footage is saved
     
-     - 
+     - Defaults requiretty
+         - TTY: Teletype Terminal
         
 apt normally doesn't need to be downloaded as compared to aptitude
 apt is part of the base system for debian
