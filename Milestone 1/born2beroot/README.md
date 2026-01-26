@@ -73,7 +73,7 @@ Instructions: 
      - sudo ufw deny 4242: denying port 4242, attempted connections from the port, never reach the server
      - sudo ufw status: checking the state of the firewall
     
-  5. Sudo and password policies
+  5. Sudo policies
 
      Who is sudoers?: 
        who is allowed to use sudo, and what they’re allowed to do with it.
@@ -124,9 +124,27 @@ Instructions: 
      - iolog_dir = where the footage is saved
     
      - Defaults requiretty
-         - TTY: Teletype Terminal
+         - TTY: Teletypewriter
+         - sudo can only be run from an interactive terminal (TTY)
+      
+         - An interactive terminal (TTY) is a session where:
+             - you type commands
+             - you see output immediately
+             - the system knows someone is there
+          
+         - Examples that count:
+            - Logging into the VM and getting a shell prompt
+            - SSH’ing into the machine and typing commands
+            - Using the VM’s console window
+          
+     - Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+         - When running commands with sudo, ignore the user’s PATH and use this one instead.
+         - prevents the VM from being hacked or messed up
+         - protects the VM from accidental or sneaky misuse of sudo
         
-  6. Script
+  6. Password policies
+
+  7. 
 
 
 apt normally doesn't need to be downloaded as compared to aptitude
