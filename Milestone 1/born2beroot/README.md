@@ -146,14 +146,33 @@ Instructions: 
 
   7. 
 
+  8. TMI
 
-apt normally doesn't need to be downloaded as compared to aptitude
-apt is part of the base system for debian
-aptitude is a seperate package that uses apt underneath
-
-apt is the installer while aptitude is just another package
-apt and apt-get -> official, default
-aptitude -> alternate UI + dependancy resolver
+     - APT:
+         - apt normally doesn't need to be downloaded as compared to aptitude
+         - apt is part of the base system for debian
+         - aptitude is a seperate package that uses apt underneath
+      
+         - apt is the installer while aptitude is just another package
+         - apt and apt-get -> official, default
+         - aptitude -> alternate UI + dependancy resolver
+      
+     - Host VS Hostname:
+         - Host:
+             - The host is the machine that runs the virtual machine.
+             - If you’re running Debian inside VirtualBox, VMware, KVM, etc.:
+                 - Your physical computer (or a cloud server) = host
+                 - The Debian system running inside it = guest
+             - Example:
+                 - Host: your laptop running Windows/macOS/Linux
+                 - Guest: Debian VM
+                   
+         - Hostname:
+             - The hostname is simply the name of a machine on a network.
+             - so for ssh user@localhost, user is the name of the user, whereas localhost is the hostname
+             - It means: “this same machine”
+             - It’s a special name that always points to 127.0.0.1
+     - 
 
 Resources: 
 
