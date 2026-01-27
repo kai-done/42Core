@@ -169,7 +169,7 @@ Instructions: 
                    
          - Hostname:
              - The hostname is simply the name of a machine on a network.
-             - so for ssh user@localhost, user is the name of the user, whereas localhost is the hostname
+             - so for user@user42, user is the name of the user, whereas user42 is the hostname
              - It means: “this same machine”
              - It’s a special name that always points to 127.0.0.1
      - 
