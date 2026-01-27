@@ -144,9 +144,11 @@ Instructions: 
         
   6. Password policies
 
-  7. 
+  7. Script
 
-  8. TMI
+  8. Crontab & Signature.txt
+
+  9. TMI
 
      - APT:
          - apt normally doesn't need to be downloaded as compared to aptitude
@@ -172,6 +174,35 @@ Instructions: 
              - so for user@user42, user is the name of the user, whereas user42 is the hostname
              - It means: “this same machine”
              - It’s a special name that always points to 127.0.0.1
+             - for ssh user@localhost, localhost is not the host name
+                 - it is a nickname defined in /etc/hosts
+                 - a well-known alias for the machine
+          
+         - How to change hostname:
+             - sudo nano /etc/hostname
+             - save and exit
+             - sudo nano /etc/hosts
+                 - usually see
+          
+                     127.0.0.1    localhost
+                     127.0.1.1    old-hostname
+      
+                 - local name - > IP lookup table
+                 - answers the question of, “If I say my own hostname, what IP address should that resolve to?”
+                 - the second line means -> “My hostname resolves to a local loopback IP”
+                   
+             - change old-hostname to the new one
+             - leave localhost alone
+             - sudo reboot
+          
+         - Reason for needing to update /etc/hosts as well when updating hostname:
+               - Many programs don’t just print the hostname — they resolve it like a network address.
+               - e.g. sudo, ssh, logging services, etc.
+           - If the hostname isn’t in /etc/hosts, those programs may:
+               - pause for a few seconds
+               - throw warnings
+               - complain they “cannot resolve hostname”
+           - ss
      - 
 
 Resources: 
@@ -179,4 +210,3 @@ Resources:
   - born2beroot guide
   - markdown cheatsheet
   - SSH manual
-  - man page
