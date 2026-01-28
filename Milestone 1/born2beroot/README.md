@@ -144,6 +144,49 @@ Instructions: 
         
   6. Password policies
 
+     - /etc/logins.defs -> a system config that controls login and password policies
+     - modify password parameters for pass_max_days and pass_min_days
+    
+     - PASS_MAX_DAYS: Maximum number of days before password expires.
+     - PASS_MIN_DAYS: Minimum number of days before password can be changed.
+     - PASS_WARN_AGE: Number of days before password expiration to show warning.
+    
+     - installing password quality library: sudo apt install libpam-pwquality
+     - it installs a PAM module (pam_pwqality.so) that checks how strong passwords are when users:
+         - change passwords
+         - create new users
+         - reset passwords
+     - PAM = Pluggable Authentication Modules
+     - shared libraries in Linux/UNIX that allow administrators to configure authentication policies—like password complexity, aging, and locking—without modifying application code
+     - They centralize security, enabling, for example, pam_pwquality to enforce password strength across SSH, login, and su services
+    
+     - once pwquality is enabled, it requries things like:
+         - minimum password length
+         - mix of upper/lowercase letters
+         - numbers and symbols
+         - rejection of common or simple passwords
+         - limits on repeated or sequential character
+    
+     - /etc/pam.d/common-password
+         - belongs to PAM
+         - controls what happens when a password is set or changed
+         - handle things like:
+             - password strength checks
+             - passwords reuse rules
+             - how passwords are stored
+    
+     - minlen=10 ucredit=-1 dcredit=-1 lcredit=-1 maxrepeat=3 reject_username difok=7 enforce_for_root
+         - minlen: password must be at least <> characters long
+         - ucredit: at least <> uppercase letter
+         - dcredit: at least <> digit
+         - lcredit: at least <> lowercase letter
+         - maxrepeat: prevents more than <> identical characters in a row
+         - reject_username: disallows passwords that contain the username
+         - difok: at least <> characters must be different from the old password
+         - enforce_for_root: applies the same rules to root
+    
+     - 
+
   7. Script
 
      - nano monitoring.sh
@@ -245,7 +288,49 @@ Instructions: 
 
   9. Crontab & Signature.txt
 
-  10. TMI
+     - sudo crontab -u root -e
+         - crontab: manage cron jobs (scheduled commands)
+         -  -u root: target the root user's cron tab
+         -  -e: edit it
+    
+     - crontab -e: runs as current user
+     - sudo crontab -u root -e: runs as root
+    
+     - cron timing format:
+         * * * * * command
+         | | | | |
+         | | | | +-- day of week (0–7, Sun)
+         | | | +---- month (1–12)            
+         | | +------ day of month (1–31)
+         | +-------- hour (0–23)
+         +---------- minute (0–59)
+  
+     - root's crontab runs with full privileges
+     - does not need sudo inside commands
+     - can modify system files, users, services
+    
+     - */10 * * * * sh /path_to_file.sh
+         - runs every 10 minutes at all time
+         - sh: shell interpreter
+         - sh /path_to_file.sh: means “Hey shell, please read /path_to_file.sh and run the commands inside it.”
+         - Cron jobs don’t automatically know what shell to use.
+         - By explicitly calling sh, you ensure that the script runs in a shell.
+         - /path_to_file.sh: the full actual path to the *.sh file
+         - ways to find the pathway to the file:
+             - pwd
+             - realpath <filename>.sh
+             - find ~ -name <filename>.sh
+    
+     - shasum machinename.vdi to get the signature
+     - shasum generates a hash (SHA checksum) of the file
+     - shasum -a 256 myvm.vdi > myvm_signature.txt to save it as a .txt file
+     - shasum -a 256 -c myvm_signature.txt to check whether vm has been opened, corrupted or changed
+    
+  10.  Lighttpd
+
+     - 
+
+  11. TMI
       
      - APT:
          - apt normally doesn't need to be downloaded as compared to aptitude
