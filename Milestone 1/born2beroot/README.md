@@ -185,8 +185,6 @@ Instructions: 
          - difok: at least <> characters must be different from the old password
          - enforce_for_root: applies the same rules to root
     
-     - 
-
   7. Script
 
      - nano monitoring.sh
@@ -325,12 +323,8 @@ Instructions: 
      - shasum generates a hash (SHA checksum) of the file
      - shasum -a 256 myvm.vdi > myvm_signature.txt to save it as a .txt file
      - shasum -a 256 -c myvm_signature.txt to check whether vm has been opened, corrupted or changed
-    
-  10.  Lighttpd
 
-     - 
-
-  11. TMI
+  10. TMI
       
      - APT:
          - apt normally doesn't need to be downloaded as compared to aptitude
