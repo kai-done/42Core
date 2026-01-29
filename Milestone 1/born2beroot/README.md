@@ -273,7 +273,8 @@ Instructions: 
           - -f1 : take the first piece
           - ip link show : cleaner and more standard for MAC Addresses
          
-        - IPv4 + MAC : echo "IPv4: $(ip -4 addr show enp0s3 | grep inet | awk '{print $2}' | cut -d/ -f1)  MAC: $(ip link show enp0s3 | grep ether | awk '{print $2}')"
+        - IPv4 + MAC : echo "IPv4: $(ip -4 addr show enp0s3 | grep inet | awk '{print $2}' | cut -d/ -f1)
+        - MAC: $(ip link show enp0s3 | grep ether | awk '{print $2}')"
       
      - number of commands executed with the sudo program: sudo journalctl | grep 'sudo' | wc -l
      - means it is checking how many times sudo is used or called, so anything like "sudo ..." will be counted
@@ -284,7 +285,7 @@ Instructions: 
          - journalctl _COMM=sudo: This command filters logs from journalctl specifically for entries where the communication (_COMM) was made by the sudo command. This means the logs are limited to entries where sudo was actually run, which can be useful if you're specifically interested in actions that involved sudo commands.
          - grep COMMAND: After getting the logs that involve sudo, this part filters those logs further to only include lines containing the word COMMAND. COMMAND here is likely meant to refer to the specific action that was executed by sudo, like apt-get update or any other command that was run via sudo.
 
-  9. Crontab & Signature.txt
+  8. Crontab & Signature.txt
 
      - sudo crontab -u root -e
          - crontab: manage cron jobs (scheduled commands)
@@ -295,6 +296,7 @@ Instructions: 
      - sudo crontab -u root -e: runs as root
     
      - cron timing format:
+         ```
          * * * * * command
          | | | | |
          | | | | +-- day of week (0–7, Sun)
@@ -302,6 +304,7 @@ Instructions: 
          | | +------ day of month (1–31)
          | +-------- hour (0–23)
          +---------- minute (0–59)
+         ```
   
      - root's crontab runs with full privileges
      - does not need sudo inside commands
@@ -324,7 +327,7 @@ Instructions: 
      - shasum -a 256 myvm.vdi > myvm_signature.txt to save it as a .txt file
      - shasum -a 256 -c myvm_signature.txt to check whether vm has been opened, corrupted or changed
 
-  10. TMI
+  9. TMI
       
      - APT:
          - apt normally doesn't need to be downloaded as compared to aptitude
@@ -398,21 +401,21 @@ Instructions: 
              ⭐ It’s a Debian convention, not universal Linux behavior.
 
          ✨ Extra:
-             - Changing the hostname does NOT mean can SSH in from outside using that name
-             - It is only for inside the VM
-               - 127.x.x.x = loopback
-               - Loopback addresses are not reachable from outside
-               - This mapping exists only on the VM
-             - Laptop does not know about the changed hostname, as laptop:
-               - does not read the VM’s /etc/hosts
-               - does not know about 127.0.1.1 <changed hostname>
-             - So SSH fails unless:
-               - DNS knows the name, or
-               - your laptop has its own /etc/hosts entry
-             - To have it work, either:
-               - type in the IP address directly, ssh user@<IP address>
-               - DNS entry, setting it up using a DNS service
-               - /etc/hosts on own machine, setting it up to allow it on own laptop
+             - Changing the hostname does NOT mean can SSH in from outside using that name  
+             - It is only for inside the VM  
+               - 127.x.x.x = loopback  
+               - Loopback addresses are not reachable from outside  
+               - This mapping exists only on the VM  
+             - Laptop does not know about the changed hostname, as laptop:  
+               - does not read the VM’s /etc/hosts  
+               - does not know about 127.0.1.1 <changed hostname>  
+             - So SSH fails unless:  
+               - DNS knows the name, or  
+               - your laptop has its own /etc/hosts entry  
+             - To have it work, either:  
+               - type in the IP address directly, ssh user@<IP address>  
+               - DNS entry, setting it up using a DNS service  
+               - /etc/hosts on own machine, setting it up to allow it on own laptop  
      - 
 
 Resources: 
